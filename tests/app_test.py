@@ -9,19 +9,18 @@ class TetrisGameTest(unittest.TestCase):
         self.game = TetrisGame()
 
     def test_create_grid(self):
-        """Test if the grid is created with the correct dimensions."""
+        """Test if the grid is created with the correct dimensions and is empty."""
         grid = self.game.create_grid()
         self.assertEqual(len(grid), self.game.height)
-        self.assertEqual(len(grid[0]), self.game.width)
         for row in grid:
-            for cell in row:
-                self.assertEqual(cell, " ")
+            self.assertEqual(row, 0)
 
     def test_can_place_empty_grid(self):
         """Test if pieces can be placed in an empty grid."""
         for piece_name in self.game.pieces:
             piece = self.game.pieces[piece_name]
-            for column in range(self.game.width - len(piece[0]) + 1):
+            piece_width = max((row.bit_length() for row in piece), default=0)
+            for column in range(self.game.width - piece_width + 1):
                 self.assertTrue(self.game.can_place(piece, 0, column))
 
     def test_can_place_out_of_bounds(self):
@@ -45,38 +44,40 @@ class TetrisGameTest(unittest.TestCase):
         )  # Try to overlap
 
     def test_add_to_grid(self):
-        """Test if a piece is added to the grid correctly."""
+        """Test if a piece is added to the grid correctly (bitfield version)."""
         piece = self.game.pieces["T"]
         self.game.add_to_grid(piece, 0, 0)
-        self.assertEqual(self.game.grid[0][0], "O")
-        self.assertEqual(self.game.grid[0][1], "O")
-        self.assertEqual(self.game.grid[0][2], "O")
-        self.assertEqual(self.game.grid[1][0], " ")
-        self.assertEqual(self.game.grid[1][1], "O")
-        self.assertEqual(self.game.grid[1][2], " ")
+        # T piece: [0b111, 0b010] placed at (0,0) on width 10
+        # Check first row: bits 7,8,9 should be set (for width 10)
+        for i in range(3):
+            self.assertTrue((self.game.grid[0] & (1 << (self.game.width - 1 - i))) != 0)
+        # Check second row: only bit 8 should be set
+        for i in range(self.game.width):
+            if i == self.game.width - 2:
+                self.assertTrue((self.game.grid[1] & (1 << i)) != 0)
+            else:
+                self.assertFalse((self.game.grid[1] & (1 << i)) != 0)
 
     def test_clear_lines_no_lines(self):
-        """Test clearing lines when there are no full lines."""
-        initial_grid = [list(row) for row in self.game.grid]  # Deep copy
+        """Test clearing lines when there are no full lines (bitfield version)."""
+        initial_grid = list(self.game.grid)  # Deep copy
         self.game.clear_lines()
         self.assertEqual(self.game.grid, initial_grid)
 
     def test_clear_lines_one_line(self):
-        """Test clearing lines when there is one full line."""
-        for i in range(self.game.width):
-            self.game.grid[0][i] = "O"
+        """Test clearing lines when there is one full line (bitfield version)."""
+        self.game.grid[0] = (1 << self.game.width) - 1  # All bits set
         self.game.clear_lines()
-        self.assertEqual(self.game.grid[0], [" " for _ in range(self.game.width)])
+        self.assertEqual(self.game.grid[0], 0)
         self.assertEqual(self.game.calculate_height(), 0)
 
     def test_clear_lines_multiple_lines(self):
-        """Test clearing lines when there are multiple full lines."""
-        for i in range(self.game.width):
-            self.game.grid[0][i] = "O"
-            self.game.grid[1][i] = "O"
+        """Test clearing lines when there are multiple full lines (bitfield version)."""
+        self.game.grid[0] = (1 << self.game.width) - 1
+        self.game.grid[1] = (1 << self.game.width) - 1
         self.game.clear_lines()
-        self.assertEqual(self.game.grid[0], [" " for _ in range(self.game.width)])
-        self.assertEqual(self.game.grid[1], [" " for _ in range(self.game.width)])
+        self.assertEqual(self.game.grid[0], 0)
+        self.assertEqual(self.game.grid[1], 0)
         self.assertEqual(self.game.calculate_height(), 0)
 
     def test_calculate_height_empty_grid(self):
@@ -89,12 +90,12 @@ class TetrisGameTest(unittest.TestCase):
         self.assertEqual(self.game.calculate_height(), 1)
 
     def test_process_input_single_piece(self):
-        """Test processing a single piece placement."""
+        """Test processing a single piece placement (bitfield version)."""
         self.game.process_input_line("Q0")
-        self.assertEqual(self.game.grid[self.game.height - 2][0], "O")
-        self.assertEqual(self.game.grid[self.game.height - 2][1], "O")
-        self.assertEqual(self.game.grid[self.game.height - 1][0], "O")
-        self.assertEqual(self.game.grid[self.game.height - 1][1], "O")
+        # Q piece: [0b11, 0b11] placed at column 0, should be at bottom two rows
+        for row_idx in [self.game.height - 2, self.game.height - 1]:
+            for col in [self.game.width - 2, self.game.width - 1]:
+                self.assertTrue((self.game.grid[row_idx] & (1 << col)) != 0)
 
     def test_process_input_multiple_pieces(self):
         """Test processing multiple piece placements."""
