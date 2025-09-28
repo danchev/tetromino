@@ -4,7 +4,7 @@ version = "0.0.0.dev0"
 description = ''
 readme = "README.md"
 requires-python = ">=3.12"
-license = "MIT"
+license = "GPL-3.0-or-later"
 keywords = []
 authors = [
   { name = "D. Danchev", email = "12420863+danchev@users.noreply.github.com" },
