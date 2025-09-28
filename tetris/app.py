@@ -113,8 +113,12 @@ class TetrisGame:
 
 
 class TetrisApp:
-    def __init__(self, **kwargs) -> None:
-        self.game = TetrisGame(**kwargs)
+    def __init__(self, use_beta: bool = False, **kwargs) -> None:
+        if use_beta:
+            from ._beta import TetrisGame as TetrisGameBeta
+            self.game = TetrisGameBeta(**kwargs)
+        else:
+            self.game = TetrisGame(**kwargs)
 
     def run(self) -> None:
         """Main function to read input and write output."""
