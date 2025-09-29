@@ -2,6 +2,7 @@
 # Usage: import and call generate_random_tetris_input(filename, num_lines)
 import random
 
+
 def generate_random_tetris_input(filename, num_lines):
     piece_types = ["Q", "Z", "S", "T", "I", "L", "J"]
     width = random.randint(5, 150)  # Random width between 5 and 15
@@ -13,6 +14,7 @@ def generate_random_tetris_input(filename, num_lines):
                 col = random.randint(0, width - 1)
                 line.append(f"{piece}{col}")
             f.write(",".join(line) + "\n")
+
 
 # Example usage:
 # generate_random_tetris_input("tests/resources/random_input.txt", 500)

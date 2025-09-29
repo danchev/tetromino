@@ -2,6 +2,7 @@ import unittest
 
 from tetris._beta import TetrisGame
 
+
 class TetrisGameTest(unittest.TestCase):
     def setUp(self):
         """Setup method to create a TetrisGame instance before each test."""
@@ -20,7 +21,8 @@ class TetrisGameTest(unittest.TestCase):
         """Test if pieces can be placed in an empty grid."""
         for piece_name in self.game.pieces:
             piece = self.game.pieces[piece_name]
-            for column in range(self.game.width - len(piece[0]) + 1):
+            piece_width = piece.width()
+            for column in range(self.game.width - piece_width + 1):
                 self.assertTrue(self.game.can_place(piece, 0, column))
 
     def test_can_place_out_of_bounds(self):

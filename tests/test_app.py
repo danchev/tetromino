@@ -19,7 +19,7 @@ class TetrisGameTest(unittest.TestCase):
         """Test if pieces can be placed in an empty grid."""
         for piece_name in self.game.pieces:
             piece = self.game.pieces[piece_name]
-            piece_width = max((row.bit_length() for row in piece), default=0)
+            piece_width = piece.width()
             for column in range(self.game.width - piece_width + 1):
                 self.assertTrue(self.game.can_place(piece, 0, column))
 

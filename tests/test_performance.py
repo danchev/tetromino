@@ -10,15 +10,12 @@ RESOURCE_PATHS = [
     "tests/resources/input_3000.txt",
 ]
 
+
 @pytest.mark.parametrize(
-    "resource_path",
-    RESOURCE_PATHS,
-    ids=[os.path.basename(p) for p in RESOURCE_PATHS]
+    "resource_path", RESOURCE_PATHS, ids=[os.path.basename(p) for p in RESOURCE_PATHS]
 )
 @pytest.mark.parametrize(
-    "klass",
-    [TetrisGame, TetrisGameBeta],
-    ids=["bitfield", "beta-list"]
+    "klass", [TetrisGame, TetrisGameBeta], ids=["bitfield", "beta-list"]
 )
 def test_tetris_benchmark_matrix(benchmark, klass, resource_path):
     with open(resource_path) as f:

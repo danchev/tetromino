@@ -16,5 +16,6 @@ def test_tetris_performance():
     # Assert that it runs in under 1 second (adjust as needed)
     assert elapsed < 1.0, f"Performance test failed: took {elapsed:.6f} seconds"
 
+
 if __name__ == "__main__":
     test_tetris_performance()
