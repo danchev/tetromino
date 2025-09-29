@@ -19,19 +19,19 @@ class TetrisGame:
         self.grid = self.create_grid()
         self.pieces = {
             # Q (O-block): 2x2
-            "Q": [0b11, 0b11],
+            "Q": (0b11, 0b11),
             # Z: 2 rows, 3 cols
-            "Z": [0b110, 0b011],
+            "Z": (0b110, 0b011),
             # S: 2 rows, 3 cols
-            "S": [0b011, 0b110],
+            "S": (0b011, 0b110),
             # T: 2 rows, 3 cols
-            "T": [0b111, 0b010],
+            "T": (0b111, 0b010),
             # I: 1 row, 4 cols
-            "I": [0b1111],
+            "I": (0b1111,),
             # L: 4 rows, 2 cols
-            "L": [0b10, 0b10, 0b10, 0b11],
+            "L": (0b10, 0b10, 0b10, 0b11),
             # J: 4 rows, 2 cols
-            "J": [0b01, 0b01, 0b01, 0b11],
+            "J": (0b01, 0b01, 0b01, 0b11),
         }
 
     def create_grid(self) -> list[int]:
