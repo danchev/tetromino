@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import sys
 
-Piece = list[int]
+Piece = tuple[int]
 
 
 class TetrisGame:
@@ -42,7 +42,10 @@ class TetrisGame:
         """Prints the current state of the grid (bitfield version)."""
         logging.debug("Current grid state:")
         for row in self.grid:
-            row_str = ''.join('O' if (row & (1 << (self.width - 1 - i))) else ' ' for i in range(self.width))
+            row_str = "".join(
+                "O" if (row & (1 << (self.width - 1 - i))) else " "
+                for i in range(self.width)
+            )
             logging.debug(row_str)
 
     def place_piece(self, piece: Piece, column: int) -> None:
@@ -116,6 +119,7 @@ class TetrisApp:
     def __init__(self, use_beta: bool = False, **kwargs) -> None:
         if use_beta:
             from ._beta import TetrisGame as TetrisGameBeta
+
             self.game = TetrisGameBeta(**kwargs)
         else:
             self.game = TetrisGame(**kwargs)
