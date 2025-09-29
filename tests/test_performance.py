@@ -27,3 +27,6 @@ def test_tetris_benchmark_matrix(benchmark, klass, resource_path):
             game.process_input_line(line)
 
     benchmark(run_game)
+
+if __name__ == "__main__":
+    pytest.main()
