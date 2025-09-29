@@ -5,16 +5,13 @@ import sys
 
 
 class Piece:
-    __slots__ = ("name", "_rows")
+    __slots__ = ("name", "rows")
 
     def __init__(self, name: str, rows: tuple[int, ...]):
         self.name = name
         # Always store as tuple of ints (bitfield representation)
-        self._rows = tuple(rows)
+        self.rows = rows
 
-    @property
-    def rows(self):
-        return self._rows
 
     def height(self) -> int:
         return len(self.rows)
