@@ -82,6 +82,7 @@ class TetrisGame:
     def place_piece(self, piece: Piece, column: int) -> None:
         """Places a piece on the grid using bitfields (standard Tetris: lands at lowest possible row)."""
         piece_height = piece.height()
+        # FIXME: Start from the top and go down to find the first valid position
         for row in range(self.height - piece_height, -1, -1):
             logging.debug(f"Trying to place piece {piece.name} at row {row}, column {column}")
             if self.can_place(piece, row, column):
