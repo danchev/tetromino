@@ -7,7 +7,7 @@ import sys
 class Piece:
     __slots__ = ("name", "_rows")
 
-    def __init__(self, name: str, rows):
+    def __init__(self, name: str, rows: tuple[int, ...]):
         self.name = name
         # Always store as tuple of ints (bitfield representation)
         self._rows = tuple(rows)
