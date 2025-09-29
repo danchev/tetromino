@@ -26,6 +26,7 @@ Without the package installed, you can run the game using the following command:
 python -m tetris < input.txt > output.txt
 ```
 
+
 With the package installed, you can run the game using the following command:
 ```console
 tetris < input.txt > output.txt
