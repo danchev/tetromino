@@ -80,10 +80,12 @@ class TetrisGame:
             logging.debug(row_str)
 
     def place_piece(self, piece: Piece, column: int) -> None:
-        """Places a piece on the grid using bitfields."""
+        """Places a piece on the grid using bitfields (standard Tetris: lands at lowest possible row)."""
         piece_height = piece.height()
         for row in range(self.height - piece_height, -1, -1):
+            logging.debug(f"Trying to place piece {piece.name} at row {row}, column {column}")
             if self.can_place(piece, row, column):
+                logging.debug(f"Can place piece {piece.name} at row {row}, column {column}")
                 self.add_to_grid(piece, row, column)
                 logging.debug(f"Placed piece at row {row}, column {column}")
                 self.print_grid()
@@ -94,16 +96,22 @@ class TetrisGame:
         piece_height = piece.height()
         piece_width = piece.width()
         if column < 0 or column + piece_width > self.width:
+            logging.debug(f"Cannot place: out of bounds col {column} width {piece_width}")
             return False
         for i in range(piece_height):
             shift = self.width - (column + piece_width)
             if shift < 0:
+                logging.debug(f"Cannot place: negative shift {shift}")
                 return False
             piece_row = piece.rows[i] << shift
             grid_row_idx = row + i
             if grid_row_idx < 0 or grid_row_idx >= self.height:
+                logging.debug(f"Cannot place: grid_row_idx {grid_row_idx} out of bounds")
                 return False
-            if (self.grid[grid_row_idx] & piece_row) != 0:
+            overlap = (self.grid[grid_row_idx] & piece_row)
+            logging.debug(f"Checking row {grid_row_idx}: grid={bin(self.grid[grid_row_idx])} piece_row={bin(piece_row)} overlap={bin(overlap)}")
+            if overlap != 0:
+                logging.debug(f"Cannot place: overlap at row {grid_row_idx}")
                 return False
         return True
 
