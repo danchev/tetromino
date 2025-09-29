@@ -12,7 +12,6 @@ class Piece:
         # Always store as tuple of ints (bitfield representation)
         self.rows = rows
 
-
     def height(self) -> int:
         return len(self.rows)
 
@@ -107,7 +106,6 @@ class TetrisGame:
             if (self.grid[grid_row_idx] & piece_row) != 0:
                 return False
         return True
-
 
     def add_to_grid(self, piece: Piece, row: int, column: int) -> None:
         """Adds a piece to the grid at the specified position using bitfields."""
