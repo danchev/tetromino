@@ -91,8 +91,6 @@ class TetrisGame:
                         return False
         return True
 
-    def _piece_width(self, piece: Piece) -> int:
-        return max((len(row) for row in piece.rows), default=0)
 
     def add_to_grid(self, piece: Piece, row: int, column: int) -> None:
         piece_height = len(piece.rows)

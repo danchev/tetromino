@@ -111,9 +111,6 @@ class TetrisGame:
                 return False
         return True
 
-    def _piece_width(self, piece: Piece) -> int:
-        """Returns the width of the piece (max bits set in any row)."""
-        return piece.width()
 
     def add_to_grid(self, piece: Piece, row: int, column: int) -> None:
         """Adds a piece to the grid at the specified position using bitfields."""
