@@ -106,7 +106,7 @@ class TetrisGameTest(unittest.TestCase):
         """Test processing input that results in clearing a line."""
         test_input = "Q0,I2,I6,I0,I6,I6,Q2,Q4"
         self.game.process_input_line(test_input)
-        self.assertEqual(self.game.calculate_height(), 1)
+        self.assertEqual(self.game.calculate_height(), 3)
 
     def test_process_input_without_line_clear(self):
         """Test processing input that does not result in clearing a line."""

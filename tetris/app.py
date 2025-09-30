@@ -82,20 +82,22 @@ class TetrisGame:
     def place_piece(self, piece: Piece, column: int) -> None:
         """Places a piece on the grid using bitfields (standard Tetris: lands at lowest possible row)."""
         piece_height = piece.height()
-        # FIXME: Start from the top and go down to find the first valid position. Note that top row has index 0, and bottom row has index height-1.
-        # The piece must fit entirely within the grid vertically.
-        # Gravity by left‑shift – “Dropping” a piece means moving each row one step
-        # downwards. In a little‑endian bit‑field, a left‑shift (<< 1) moves bit 0 to bit 1,
-        # bit 1 to bit 2, etc. This is a single primitive operation; no conditional
-        # masking or reverse‑shifts required.
-        for row in range(self.height - piece_height, -1, -1):
+        # Start from the top (row 0) and go down to find the lowest valid position
+        # Note that top row has index 0, and bottom row has index height-1.
+        last_valid_row = None
+        for row in range(0, self.height - piece_height + 1):
             logging.debug(f"Trying to place piece {piece.name} at row {row}, column {column}")
             if self.can_place(piece, row, column):
-                logging.debug(f"Can place piece {piece.name} at row {row}, column {column}")
-                self.add_to_grid(piece, row, column)
-                logging.debug(f"Placed piece at row {row}, column {column}")
-                self.print_grid()
+                last_valid_row = row
+            else:
+                # Hit an obstacle, can't go any lower
                 break
+        
+        if last_valid_row is not None:
+            logging.debug(f"Can place piece {piece.name} at row {last_valid_row}, column {column}")
+            self.add_to_grid(piece, last_valid_row, column)
+            logging.debug(f"Placed piece at row {last_valid_row}, column {column}")
+            self.print_grid()
 
     def can_place(self, piece: Piece, row: int, column: int) -> bool:
         """Checks if a piece can be placed at the given row and column using bitfields."""

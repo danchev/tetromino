@@ -66,12 +66,19 @@ class TetrisGame:
 
     def place_piece(self, piece: Piece, column: int) -> None:
         piece_height = len(piece.rows)
-        for row in range(self.height - piece_height, -1, -1):
+        # Start from the top (row 0) and go down to find the lowest valid position
+        last_valid_row = None
+        for row in range(0, self.height - piece_height + 1):
             if self.can_place(piece, row, column):
-                self.add_to_grid(piece, row, column)
-                logging.debug(f"[Beta] Placed piece at row {row}, column {column}")
-                self.print_grid()
+                last_valid_row = row
+            else:
+                # Hit an obstacle, can't go any lower
                 break
+        
+        if last_valid_row is not None:
+            self.add_to_grid(piece, last_valid_row, column)
+            logging.debug(f"[Beta] Placed piece at row {last_valid_row}, column {column}")
+            self.print_grid()
 
     def can_place(self, piece: Piece, row: int, column: int) -> bool:
         piece_height = len(piece.rows)
