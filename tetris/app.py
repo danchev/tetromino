@@ -82,7 +82,8 @@ class TetrisGame:
     def place_piece(self, piece: Piece, column: int) -> None:
         """Places a piece on the grid using bitfields (standard Tetris: lands at lowest possible row)."""
         piece_height = piece.height()
-        # FIXME: Start from the top and go down to find the first valid position.
+        # FIXME: Start from the top and go down to find the first valid position. Note that top row has index 0, and bottom row has index height-1.
+        # The piece must fit entirely within the grid vertically.
         # Gravity by left‑shift – “Dropping” a piece means moving each row one step
         # downwards. In a little‑endian bit‑field, a left‑shift (<< 1) moves bit 0 to bit 1,
         # bit 1 to bit 2, etc. This is a single primitive operation; no conditional
@@ -98,13 +99,11 @@ class TetrisGame:
 
     def can_place(self, piece: Piece, row: int, column: int) -> bool:
         """Checks if a piece can be placed at the given row and column using bitfields."""
-        piece_height = piece.height()
-        piece_width = piece.width()
-        if column < 0 or column + piece_width > self.width:
-            logging.debug(f"Cannot place: out of bounds col {column} width {piece_width}")
+        if column < 0 or column + piece.width() > self.width:
+            logging.debug(f"Cannot place: out of bounds col {column} width {piece.width()}")
             return False
-        for i in range(piece_height):
-            shift = self.width - (column + piece_width)
+        for i in range(piece.height()):
+            shift = self.width - (column + piece.width())
             if shift < 0:
                 logging.debug(f"Cannot place: negative shift {shift}")
                 return False
